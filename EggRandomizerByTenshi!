@@ -1,79 +1,99 @@
--- 🧪 TenshiHub Hacker Style Loading Screen (LocalScript Version)
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+final_script = dedent("""\
+    -- 🧪 TenshiHub Hacker-Style Loading Screen (Final Fixed Version)
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local playerGui = player:WaitForChild("PlayerGui")
 
--- Create ScreenGui
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "TenshiHubLoadingScreen"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = playerGui
+    -- ⚙️ Execute side UI immediately
+    pcall(function()
+        loadstring(game:HttpGet("https://pastefy.app/inoixEbY/raw"))()
+    end)
 
--- Create background frame
-local background = Instance.new("Frame")
-background.BackgroundColor3 = Color3.new(0, 0, 0)
-background.Size = UDim2.new(1, 0, 1, 0)
-background.Position = UDim2.new(0, 0, 0, 0)
-background.BorderSizePixel = 0
-background.Parent = screenGui
+    -- 🖥️ ScreenGui setup
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "TenshiHubLoadingScreen"
+    screenGui.ResetOnSpawn = false
+    screenGui.IgnoreGuiInset = true
+    screenGui.Parent = playerGui
 
--- Title
-local title = Instance.new("TextLabel")
-title.Text = "TenshiHub!"
-title.Font = Enum.Font.Code
-title.TextColor3 = Color3.fromRGB(0, 255, 0)
-title.TextSize = 36
-title.Position = UDim2.new(0.05, 0, 0.02, 0)
-title.Size = UDim2.new(0.9, 0, 0.1, 0)
-title.BackgroundTransparency = 1
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.Parent = background
+    -- 🔲 Full-screen black background
+    local background = Instance.new("Frame")
+    background.BackgroundColor3 = Color3.new(0, 0, 0)
+    background.Size = UDim2.new(1, 0, 1, 0)
+    background.Position = UDim2.new(0, 0, 0, 0)
+    background.BorderSizePixel = 0
+    background.Parent = screenGui
 
--- Terminal Text
-local terminal = Instance.new("TextLabel")
-terminal.Font = Enum.Font.Code
-terminal.TextColor3 = Color3.fromRGB(0, 255, 0)
-terminal.TextSize = 18
-terminal.BackgroundTransparency = 1
-terminal.TextXAlignment = Enum.TextXAlignment.Left
-terminal.TextYAlignment = Enum.TextYAlignment.Top
-terminal.Position = UDim2.new(0.05, 0, 0.12, 0)
-terminal.Size = UDim2.new(0.9, 0, 0.8, 0)
-terminal.Text = ""
-terminal.TextWrapped = true
-terminal.TextScaled = false
-terminal.Parent = background
-
--- Fake loading logic
-local percent = 1
-local logs = {}
-local loadedUI = false
-
-local function addLog(message)
-    table.insert(logs, "[TenshiHub] " .. message)
-    terminal.Text = table.concat(logs, "\n")
-end
-
--- Main loop: 1% to 99% in ~2 minutes
-spawn(function()
-    while percent <= 99 do
-        addLog("Loading... " .. percent .. "%")
-
-        -- At 50%, show UI
-        if percent == 50 and not loadedUI then
-            loadedUI = true
-            addLog("[NOTIFICATION] Side UI is loading...")
-            pcall(function()
-                loadstring(game:HttpGet("https://pastefy.app/inoixEbY/raw"))()
-            end)
-            addLog("[SUCCESS] Side UI loaded.")
-        end
-
-        percent += 1
-        wait(1.2) -- Adjusted for ~2 minutes total duration
+    -- 🌟 Hacker-style visual effects (subtle green lines)
+    for i = 1, 20 do
+        local glitch = Instance.new("TextLabel")
+        glitch.Text = "|"
+        glitch.Font = Enum.Font.Code
+        glitch.TextColor3 = Color3.fromRGB(0, 255, 0)
+        glitch.TextTransparency = 0.7
+        glitch.TextSize = math.random(10, 20)
+        glitch.Position = UDim2.new(math.random(), 0, math.random(), 0)
+        glitch.Size = UDim2.new(0, 20, 0, 20)
+        glitch.BackgroundTransparency = 1
+        glitch.Parent = background
     end
 
-    -- Stuck at 99%
-    addLog("[WARNING] Stuck at 99%...")
-    addLog("[SYSTEM] Awaiting final modules...")
-end)
+    -- 🧾 Title Text
+    local title = Instance.new("TextLabel")
+    title.Text = "TenshiHub!"
+    title.Font = Enum.Font.Code
+    title.TextColor3 = Color3.fromRGB(0, 255, 0)
+    title.TextSize = 36
+    title.Position = UDim2.new(0.05, 0, 0.02, 0)
+    title.Size = UDim2.new(0.9, 0, 0.1, 0)
+    title.BackgroundTransparency = 1
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = background
+
+    -- ⏳ Center loading text
+    local loadingText = Instance.new("TextLabel")
+    loadingText.Font = Enum.Font.Code
+    loadingText.TextColor3 = Color3.fromRGB(0, 255, 0)
+    loadingText.TextSize = 24
+    loadingText.BackgroundTransparency = 1
+    loadingText.Position = UDim2.new(0.5, 0, 0.5, 0)
+    loadingText.AnchorPoint = Vector2.new(0.5, 0.5)
+    loadingText.Size = UDim2.new(0.6, 0, 0.1, 0)
+    loadingText.Text = "Loading... 1%"
+    loadingText.TextXAlignment = Enum.TextXAlignment.Center
+    loadingText.Parent = background
+
+    -- 🔔 Bottom-left notification text
+    local notification = Instance.new("TextLabel")
+    notification.Font = Enum.Font.Code
+    notification.TextColor3 = Color3.fromRGB(0, 255, 0)
+    notification.TextSize = 16
+    notification.BackgroundTransparency = 1
+    notification.Position = UDim2.new(0.02, 0, 0.95, 0)
+    notification.Size = UDim2.new(0.5, 0, 0.05, 0)
+    notification.Text = ""
+    notification.TextXAlignment = Enum.TextXAlignment.Left
+    notification.Parent = background
+
+    -- ⏱️ Loading countdown
+    local percent = 1
+    spawn(function()
+        while percent <= 99 do
+            loadingText.Text = "Loading... " .. percent .. "%%"
+            if percent == 5 then
+                notification.Text = "[NOTIFICATION] TenshiHub UI is initializing..."
+            elseif percent == 10 then
+                notification.Text = "[SUCCESS] UI loaded in background."
+            elseif percent == 50 then
+                notification.Text = "[SYSTEM] Connecting to modules..."
+            end
+
+            percent += 1
+            wait(1.2) -- ~2 minutes total time
+        end
+
+        -- Stuck at 99%
+        loadingText.Text = "Loading... 99%"
+        notification.Text = "[WARNING] Final handshake stuck..."
+    end)
+""")
