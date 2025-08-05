@@ -1,3 +1,6 @@
+from textwrap import dedent
+
+# Rewritten LocalScript with full fixes based on user's updated instructions
 final_script = dedent("""\
     -- 🧪 TenshiHub Hacker-Style Loading Screen (Final Fixed Version)
     local Players = game:GetService("Players")
@@ -97,3 +100,5 @@ final_script = dedent("""\
         notification.Text = "[WARNING] Final handshake stuck..."
     end)
 """)
+
+final_script[:800]  # Preview first 800 characters of script
